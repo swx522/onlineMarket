@@ -1,22 +1,54 @@
 //李宇轩 2353737
-package com.garfield.model;
+package com.garfield.commands;
 
-/**
- * 简单任务类，基本的待办事项
- */
-public class SimpleTask extends Task {
+import com.garfield.service.PomodoroTimer;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
+@Command(
+    name = "timer",
+    description = "启动Pomodoro计时器"
+)
+public class TimerCommand implements Runnable {
     
-    public SimpleTask(String title, Priority priority) {
-        super(title, priority);
+    @Option(names = {"--work"}, 
+            description = "工作时间（秒）", 
+            defaultValue = "25")
+    private int workSeconds;
+    
+    @Option(names = {"--break"}, 
+            description = "休息时间（秒）", 
+            defaultValue = "5")
+    private int breakSeconds;
+    
+    @Option(names = {"--cycles"}, 
+            description = "循环次数", 
+            defaultValue = "1")
+    private int cycles;
+    
+    private PomodoroTimer pomodoroTimer;
+    
+    public TimerCommand(PomodoroTimer pomodoroTimer) {
+        this.pomodoroTimer = pomodoroTimer;
     }
     
     @Override
-    public String describe() {
-        return String.format("简单任务: %s\n" +
-                           "ID: %s\n" +
-                           "优先级: %s\n" +
-                           "状态: %s\n" +
-                           "创建时间: %s",
-            title, id, priority, status, createdAt);
+    public void run() {
+        try {
+            if (workSeconds <= 0 || breakSeconds <= 0 || cycles <= 0) {
+                System.err.println("错误: 工作时间、休息时间和循环次数都必须大于0");
+                return;
+            }
+            
+            if (pomodoroTimer.isRunning()) {
+                System.err.println("错误: Pomodoro计时器已在运行中");
+                return;
+            }
+            
+            pomodoroTimer.startTimer(workSeconds, breakSeconds, cycles);
+            
+        } catch (Exception e) {
+            System.err.println("意外错误: " + e.getMessage());
+        }
     }
 }
