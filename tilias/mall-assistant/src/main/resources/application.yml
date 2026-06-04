@@ -1,0 +1,52 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: mall-assistant
+  mvc:
+    # Springfox 3.0 与 Spring Boot 2.7 兼容所需，缺少会导致启动报错
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # Redis 仅在 assistant.memory.type=redis 时才会真正使用；默认内存模式下无需启动 Redis
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 3000ms
+    # password:
+
+assistant:
+  # 总开关，关闭后接口统一返回降级话术
+  enabled: true
+  fallback-reply: "智能助手暂时打了个盹儿，请稍后再试，或联系人工客服～"
+  llm:
+    # 服务商：tongyi（阿里云通义千问，OpenAI 兼容协议）
+    provider: tongyi
+    base-url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+    # 切勿硬编码！通过环境变量注入：export DASHSCOPE_API_KEY=sk-xxxx
+    api-key: ${DASHSCOPE_API_KEY:}
+    model: qwen-plus
+    temperature: 0.7
+    max-tokens: 1024
+    timeout-millis: 30000
+    # system-prompt: 留空则使用内置的电商客服人设
+  memory:
+    # 上下文记忆存储：memory（进程内，默认）或 redis（多实例共享）
+    type: memory
+    # 保留最近的对话轮数（1 轮 = 1 问 1 答）
+    max-rounds: 5
+    # 会话过期时间（秒），仅 redis 模式生效
+    ttl-seconds: 1800
+  rate-limit:
+    enabled: true
+    # 单用户每分钟最多调用次数
+    max-per-minute: 10
+  sensitive:
+    enabled: true
+    # 自定义敏感词（会与内置基础词库合并）
+    words: []
+
+logging:
+  level:
+    com.macro.mall.assistant: info
