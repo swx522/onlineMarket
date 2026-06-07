@@ -9,6 +9,8 @@ import com.macro.mall.assistant.exception.SensitiveContentException;
 import com.macro.mall.assistant.llm.LlmClient;
 import com.macro.mall.assistant.llm.LlmException;
 import com.macro.mall.assistant.llm.LlmMessage;
+import com.macro.mall.assistant.rag.DataQueryService;
+import com.macro.mall.assistant.rag.IntentRecognizer;
 import com.macro.mall.assistant.service.AssistantService;
 import com.macro.mall.assistant.service.ChatMemoryStore;
 import com.macro.mall.assistant.service.RateLimiterService;
@@ -37,19 +39,25 @@ public class AssistantServiceImpl implements AssistantService {
     private final SensitiveWordFilter sensitiveWordFilter;
     private final RateLimiterService rateLimiterService;
     private final PromptBuilder promptBuilder;
+    private final IntentRecognizer intentRecognizer;
+    private final DataQueryService dataQueryService;
 
     public AssistantServiceImpl(AssistantProperties properties,
                                 LlmClient llmClient,
                                 ChatMemoryStore memoryStore,
                                 SensitiveWordFilter sensitiveWordFilter,
                                 RateLimiterService rateLimiterService,
-                                PromptBuilder promptBuilder) {
+                                PromptBuilder promptBuilder,
+                                IntentRecognizer intentRecognizer,
+                                DataQueryService dataQueryService) {
         this.properties = properties;
         this.llmClient = llmClient;
         this.memoryStore = memoryStore;
         this.sensitiveWordFilter = sensitiveWordFilter;
         this.rateLimiterService = rateLimiterService;
         this.promptBuilder = promptBuilder;
+        this.intentRecognizer = intentRecognizer;
+        this.dataQueryService = dataQueryService;
     }
 
     @Override
@@ -74,12 +82,22 @@ public class AssistantServiceImpl implements AssistantService {
             throw new SensitiveContentException("您的提问包含不被支持的内容，请调整后再试～");
         }
 
-        // 3. 加载历史上下文（最近 N 轮）
+        // 3. 意图识别 + 真实数据查询（RAG）
+        IntentRecognizer.IntentResult intent = intentRecognizer.recognize(request.getMessage());
+        String dataContext = null;
+        if (request.getMemberId() != null && intent.getIntentType() != IntentRecognizer.IntentType.GENERAL_CHAT) {
+            dataContext = dataQueryService.query(intent, request.getMemberId());
+            if (dataContext != null) {
+                log.info("RAG 命中: intent={}, memberId={}", intent.getIntentType(), request.getMemberId());
+            }
+        }
+
+        // 4. 加载历史上下文（最近 N 轮）
         List<LlmMessage> history = memoryStore.getHistory(sessionId);
 
-        // 4. 组装消息：system 提示词 + 历史 + 本次用户输入
+        // 5. 组装消息：增强 system 提示词 + 历史 + 本次用户输入
         List<LlmMessage> messages = new ArrayList<>();
-        messages.add(LlmMessage.system(promptBuilder.systemPrompt()));
+        messages.add(LlmMessage.system(promptBuilder.systemPromptWithData(dataContext)));
         messages.addAll(history);
         LlmMessage userMessage = LlmMessage.user(request.getMessage());
         messages.add(userMessage);

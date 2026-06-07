@@ -8,6 +8,15 @@ spring:
     # Springfox 3.0 与 Spring Boot 2.7 兼容所需，缺少会导致启动报错
     pathmatch:
       matching-strategy: ant_path_matcher
+  # 数据库连接（与 mall 主工程共用同一个 mall 库）
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 548866
+    druid:
+      initial-size: 5
+      min-idle: 10
+      max-active: 20
   # Redis 仅在 assistant.memory.type=redis 时才会真正使用；默认内存模式下无需启动 Redis
   redis:
     host: localhost
@@ -15,6 +24,11 @@ spring:
     database: 0
     timeout: 3000ms
     # password:
+
+# MyBatis mapper 扫描：同时扫描本模块和 mall-mbg 模块的 XML
+mybatis:
+  mapper-locations:
+    - classpath*:com/**/mapper/*.xml
 
 assistant:
   # 总开关，关闭后接口统一返回降级话术
