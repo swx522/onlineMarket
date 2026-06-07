@@ -43,7 +43,7 @@ onlineMarket/
 | mall-admin | 8080 | 后台管理 API |
 | mall-portal | 8085 | 前台门户 API |
 | mall-search | 8081 | 商品检索 API |
-| mall-assistant | 8085 | 智能客服助手 API |
+| mall-assistant | 8086 | 智能客服助手 API |
 
 ## 前置环境
 
