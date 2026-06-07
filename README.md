@@ -248,9 +248,9 @@ MyBatis Generator 自动生成的 Model、Mapper 接口和 XML 映射文件，�
 ---
 
 
-## 八、mall-assistant — 智能客服助手
+## 七、mall-assistant — 智能客服助手
 
-基础包路径 `com.macro.mall.assistant`，独立模块，位于 `tilias/` 目录下。默认端口 **8085**。
+基础包路径 `com.macro.mall.assistant`，独立模块，位于 `tilias/` 目录下。默认端口 **8086**。
 
 ### API 接口
 
@@ -283,23 +283,23 @@ MyBatis Generator 自动生成的 Model、Mapper 接口和 XML 映射文件，�
 
 ```bash
 # 纯对话模式（不传 memberId，LLM 基于训练数据回答）
-curl -X POST http://localhost:8085/assistant/chat \
+curl -X POST http://localhost:8086/assistant/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"有什么手机推荐吗"}'
 
 # 多轮对话（带 sessionId 维持上下文）
 # 第 1 轮
-curl -X POST http://localhost:8085/assistant/chat \
+curl -X POST http://localhost:8086/assistant/chat \
   -d '{"message":"有什么手机推荐吗"}'
 # → 返回 "sessionId":"sess-abc123"
 
 # 第 2 轮
-curl -X POST http://localhost:8085/assistant/chat \
+curl -X POST http://localhost:8086/assistant/chat \
   -d '{"message":"第一个多少钱","sessionId":"sess-abc123"}'
 # → AI 知道"第一个"指的是上一轮推荐的手机
 
 # 数据增强模式（RAG，传 memberId 查真实数据）
-curl -X POST http://localhost:8085/assistant/chat \
+curl -X POST http://localhost:8086/assistant/chat \
   -d '{"message":"我的订单发货了吗","memberId":1}'
 # → AI 自动查 ums_member 表该用户的真实订单/积分/优惠券，基于真实数据回答
 ```
@@ -378,7 +378,7 @@ cd tilias/mall-assistant && mvn spring-boot:run
 | mall-admin | http://localhost:8080/swagger-ui/index.html |
 | mall-portal | http://localhost:8085/swagger-ui/index.html |
 | mall-search | http://localhost:8081/swagger-ui/index.html |
-| mall-assistant | http://localhost:8085/swagger-ui/index.html |
+| mall-assistant | http://localhost:8086/swagger-ui/index.html |
 
 ## 安全注意事项
 
