@@ -12,7 +12,6 @@ onlineMarket/
 ├── mall-admin/           后台管理服务（31 个控制器，商品/订单/用户/营销管理）
 ├── mall-portal/          前台门户服务（购物车/下单/支付/会员中心，13 个控制器）
 ├── mall-search/          Elasticsearch 商品全文检索服务
-├── mall-demo/            演示/示例模块
 └── tilias/
     └── mall-assistant/   智能客服助手（LLM 对话 + 数据库检索增强 RAG）
 ```
@@ -248,11 +247,6 @@ MyBatis Generator 自动生成的 Model、Mapper 接口和 XML 映射文件，�
 
 ---
 
-## 七、mall-demo — 演示模块
-
-基础包路径 `com.macro.mall.demo`，展示如何基于 mall 框架开发。包含 `DemoController`（品牌 CRUD 示例）、`RestTemplateDemoController`（RestTemplate 各种用法演示），以及自定义校验注解 `FlagValidator` 等参考代码。
-
----
 
 ## 八、mall-assistant — 智能客服助手
 
