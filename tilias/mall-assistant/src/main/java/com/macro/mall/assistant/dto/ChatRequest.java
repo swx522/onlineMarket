@@ -20,6 +20,9 @@ public class ChatRequest {
     @ApiModelProperty(value = "用户标识，用于限流维度；可传会员ID，不传则按会话/IP限流", example = "member-1001")
     private String userId;
 
+    @ApiModelProperty(value = "会员ID（数据库真实用户ID），传入后可查询该用户的订单、商品、账号等真实数据", example = "1")
+    private Long memberId;
+
     @NotBlank(message = "消息内容不能为空")
     @Size(max = 2000, message = "消息内容过长，请控制在2000字以内")
     @ApiModelProperty(value = "用户输入的问题", required = true, example = "我买的商品什么时候发货？")

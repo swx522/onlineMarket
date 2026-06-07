@@ -20,17 +20,15 @@
     <description>电商智能客服助手（LLM 对话）后端服务</description>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
-        <relativePath/>
+        <groupId>com.macro.mall</groupId>
+        <artifactId>mall</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springfox.version>3.0.0</springfox.version>
-        <hutool.version>5.8.9</hutool.version>
     </properties>
 
     <dependencies>
@@ -65,13 +63,16 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
         <!-- Swagger / Knife4j 风格 API 文档（Springfox） -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox.version}</version>
+        </dependency>
+        <!-- mall 数据库模块（Mapper + Model + PageHelper + Druid + MySQL） -->
+        <dependency>
+            <groupId>com.macro.mall</groupId>
+            <artifactId>mall-mbg</artifactId>
         </dependency>
         <!-- 测试 -->
         <dependency>

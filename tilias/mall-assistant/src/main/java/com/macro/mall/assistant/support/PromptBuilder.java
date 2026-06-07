@@ -39,4 +39,22 @@ public class PromptBuilder {
         String custom = properties.getLlm().getSystemPrompt();
         return StringUtils.hasText(custom) ? custom : DEFAULT_SYSTEM_PROMPT;
     }
+
+    /**
+     * 构建包含真实业务数据的增强系统提示词。
+     *
+     * @param dataContext DataQueryService 查询到的真实数据文本；为 null 则退化为普通 system prompt
+     */
+    public String systemPromptWithData(String dataContext) {
+        String base = systemPrompt();
+        if (!StringUtils.hasText(dataContext)) {
+            return base;
+        }
+        return base +
+                "\n\n---\n" +
+                "【重要】以下是你平台中该用户的<b>真实数据</b>，请直接引用这些数据来回答用户问题，" +
+                "不要编造数据。这些数据只有你能看到，不要在回复中主动提及'系统的数据'或'数据库里显示'等措辞，" +
+                "而应自然地当作已知信息来回答：\n\n" +
+                dataContext;
+    }
 }

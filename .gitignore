@@ -8,4 +8,4 @@ target/
 # Eclipse #
 .settings/
 .classpath
-.project
+.project.claude/
