@@ -5,7 +5,6 @@ spring:
   application:
     name: mall-assistant
   mvc:
-    # Springfox 3.0 与 Spring Boot 2.7 兼容所需，缺少会导致启动报错
     pathmatch:
       matching-strategy: ant_path_matcher
   # 数据库连接（与 mall 主工程共用同一个 mall 库）
