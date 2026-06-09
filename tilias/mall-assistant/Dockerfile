@@ -11,8 +11,8 @@ COPY tilias tilias/
 RUN mvn install -pl mall-common,mall-mbg -am -DskipTests -Ddocker.skip=true -Dmaven.javadoc.skip=true --batch-mode
 RUN mvn package -f tilias/mall-assistant/pom.xml -DskipTests -Ddocker.skip=true -Dmaven.javadoc.skip=true --batch-mode
 
-FROM eclipse-temurin:8-jre-alpine
-RUN apk add --no-cache tzdata curl
+FROM eclipse-temurin:8-jre
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 ENV TZ=Asia/Shanghai
 COPY --from=build /app/tilias/mall-assistant/target/mall-assistant-1.0-SNAPSHOT.jar /app.jar
 EXPOSE 8086
