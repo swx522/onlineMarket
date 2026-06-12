@@ -1,13 +1,10 @@
-//李宇轩 2353737
+
 package com.garfield.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-/**
- * 带截止日期的任务类
- */
 public class DeadlineTask extends Task {
     
     private LocalDateTime deadline;
